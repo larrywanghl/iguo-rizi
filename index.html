@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>i过日子 · 把日子过明白一点</title>
+<meta name="description" content="i过日子 是一个个人做的小工具，帮你在日常消费里把信息理清楚，做决定的时候心里有数。">
+<meta property="og:title" content="i过日子 · 把日子过明白一点">
+<meta property="og:description" content="买之前多看一眼，日子就少花一点冤枉钱。">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F6B4F'/%3E%3Ctext x='32' y='45' font-size='38' font-family='Georgia,serif' fill='%23FAF7F2' text-anchor='middle'%3Ei%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#FAF7F2;
+    --surface:#FFFFFF;
+    --text:#1F1D1A;
+    --muted:#6B665E;
+    --line:#E6DFD4;
+    --accent:#2F6B4F;
+    --accent-soft:#E9F0EB;
+    --radius:18px;
+    --max:940px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #F1EDE3 0%, transparent 60%),
+      radial-gradient(900px 500px at 95% 0%, #EAF0EA 0%, transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+
+  /* nav */
+  header{
+    position:sticky;top:0;z-index:20;
+    backdrop-filter:blur(12px);
+    background:rgba(250,247,242,.78);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease;
+  }
+  header.scrolled{border-bottom-color:var(--line)}
+  nav{
+    max-width:var(--max);margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:.01em}
+  .mark{
+    width:28px;height:28px;border-radius:9px;background:var(--accent);
+    color:#FAF7F2;display:grid;place-items:center;
+    font-family:Georgia,"Times New Roman",serif;font-size:19px;line-height:1;
+    padding-bottom:2px;
+  }
+  .navlinks{display:flex;gap:22px;font-size:14.5px}
+  .navlinks a{color:var(--muted);text-decoration:none;transition:color .2s}
+  .navlinks a:hover{color:var(--accent)}
+
+  /* hero */
+  .hero{padding:96px 0 72px;animation:rise .8s ease both}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;color:var(--accent);background:var(--accent-soft);
+    border:1px solid #D8E4DC;border-radius:999px;padding:5px 14px;
+    letter-spacing:.02em;margin-bottom:26px;
+  }
+  .badge i{width:6px;height:6px;border-radius:50%;background:var(--accent);display:block}
+  h1{
+    font-size:clamp(2.15rem,5.6vw,3.55rem);
+    line-height:1.28;font-weight:640;letter-spacing:-.015em;
+    margin-bottom:22px;
+  }
+  h1 em{font-style:normal;color:var(--accent);position:relative;white-space:nowrap}
+  h1 em::after{
+    content:"";position:absolute;left:0;right:0;bottom:.08em;height:.32em;
+    background:var(--accent-soft);z-index:-1;border-radius:3px;
+  }
+  .lead{font-size:clamp(1.02rem,2.4vw,1.2rem);color:var(--text);max-width:38em;margin-bottom:16px}
+  .sub{font-size:15.5px;color:var(--muted);max-width:40em}
+
+  /* cards */
+  section{padding:56px 0}
+  .kicker{
+    font-size:12.5px;letter-spacing:.18em;color:var(--muted);
+    text-transform:uppercase;margin-bottom:14px;
+  }
+  h2{font-size:clamp(1.4rem,3.4vw,1.85rem);font-weight:620;letter-spacing:-.01em;margin-bottom:34px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px 26px;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 34px -18px rgba(31,29,26,.28);border-color:#D9D0C2}
+  .card h3{font-size:17px;font-weight:640;margin-bottom:10px;letter-spacing:.01em}
+  .card p{font-size:14.6px;color:var(--muted);line-height:1.8}
+  .num{
+    font-family:Georgia,serif;font-size:13px;color:var(--accent);
+    display:block;margin-bottom:16px;letter-spacing:.08em;
+  }
+
+  /* principles */
+  .principles{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .plist{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .pitem{padding:0 30px;border-left:1px solid var(--line)}
+  .pitem:first-child{border-left:none;padding-left:0}
+  .pitem h3{font-size:16.5px;font-weight:640;margin-bottom:8px}
+  .pitem p{font-size:14.4px;color:var(--muted);line-height:1.8}
+
+  /* about */
+  .about{max-width:640px}
+  .about p{font-size:16px;color:#3A3630;margin-bottom:18px}
+  .about p:last-child{margin-bottom:0;color:var(--muted);font-size:15px}
+
+  /* footer */
+  footer{padding:44px 0 60px;border-top:1px solid var(--line);margin-top:20px}
+  .foot{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;
+    font-size:13.5px;color:var(--muted)}
+  .foot .dot{opacity:.45;margin:0 8px}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  @media (max-width:760px){
+    .hero{padding:64px 0 48px}
+    .cards{grid-template-columns:1fr;gap:14px}
+    .plist{grid-template-columns:1fr;gap:26px}
+    .pitem{border-left:none;padding:0}
+    .navlinks{display:none}
+    section{padding:44px 0}
+  }
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <nav>
+    <div class="brand"><span class="mark">i</span><span>i过日子</span></div>
+    <div class="navlinks">
+      <a href="#what">在做什么</a>
+      <a href="#rules">三条原则</a>
+      <a href="#about">关于</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="hero">
+      <span class="badge"><i></i>个人项目 · 非商业</span>
+      <h1>把日子，<em>过明白</em>一点</h1>
+      <p class="lead">买之前多看一眼，日子就少花一点冤枉钱。</p>
+      <p class="sub">i过日子 是我自己做的一个小工具。它不替你下单，也不催你买，只帮你在做决定之前，把该看的信息看清楚。</p>
+    </section>
+
+    <section id="what">
+      <div class="kicker">What it does</div>
+      <h2>它只做三件小事</h2>
+      <div class="cards">
+        <div class="card">
+          <span class="num">01</span>
+          <h3>说清楚</h3>
+          <p>想买什么，说一句就行。规格、型号这些容易看花眼的细节，交给它整理。</p>
+        </div>
+        <div class="card">
+          <span class="num">02</span>
+          <h3>看明白</h3>
+          <p>价格、规格、活动，摆在一起看。不用来回翻十几个页面，也不用拿计算器算半天。</p>
+        </div>
+        <div class="card">
+          <span class="num">03</span>
+          <h3>不折腾</h3>
+          <p>没有推送，没有弹窗，没有“仅剩三件”。看完就走，不留下任何牵挂。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="principles" id="rules">
+      <div class="kicker">Principles</div>
+      <h2>三条原则</h2>
+      <div class="plist">
+        <div class="pitem">
+          <h3>不做买卖</h3>
+          <p>不卖货、不代下单、不碰你的支付。它只是个帮你看清楚的东西。</p>
+        </div>
+        <div class="pitem">
+          <h3>不留数据</h3>
+          <p>不收集账号密码，不保存你的购物记录。用完即走。</p>
+        </div>
+        <div class="pitem">
+          <h3>不打扰</h3>
+          <p>没有广告位，没有“限时秒杀”，没有催你掏钱的倒计时。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="kicker">About</div>
+      <h2>关于</h2>
+      <div class="about">
+        <p>i过日子 是我一个人做的小工具。</p>
+        <p>起因很简单：每次大促，规则看得人头大，买完又怀疑自己是不是买贵了。后来想，能不能有个东西，在买之前把该看的都摆出来，让我少纠结一会儿。</p>
+        <p>它做的事不复杂——把你想买的东西，相关信息理清楚。不承诺最低，不保证划算，只是让你心里有数。</p>
+        <p>现在还在自己用，慢慢打磨。觉得有用，就留着；觉得没用，关掉也不损失什么。</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>i过日子 <span class="dot">·</span> 个人项目，非商业用途 <span class="dot">·</span> 与任何电商平台无隶属关系</div>
+    <div>© 2026</div>
+  </div>
+</footer>
+
+<script>
+  const hdr = document.getElementById('hdr');
+  const onScroll = () => hdr.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+</script>
+</body>
+</html>
