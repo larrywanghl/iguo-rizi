@@ -1,0 +1,45 @@
+name: 4etf-update
+
+on:
+  schedule:
+    # 每 10 分钟一次，UTC 01:00-07:00 = 北京 09:00-15:00（周一~五，盘中）
+    - cron: '*/10 1-7 * * 1-5'
+  workflow_dispatch:        # 仓库 Actions 页面可手动触发
+
+permissions:
+  contents: write           # 允许 GITHUB_TOKEN 提交/推送
+
+concurrency:
+  group: 4etf-update
+  cancel-in-progress: false # 不取消正在跑的，避免重叠
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install numpy
+        run: pip install numpy
+
+      # 拉腾讯日线 → 算 v2co 净值/回撤 → 生成 4etf.html（数据内嵌）
+      - name: Build 4etf.html
+        run: python build.py
+
+      # 只在 4etf.html 变化时提交（盘中日线更新/收盘出新bar才提交，避免刷屏）
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 4etf.html
+          if git diff --cached --quiet; then
+            echo "no change, skip push"
+          else
+            git commit -m "4etf: update $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git push
+          fi
