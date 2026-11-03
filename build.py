@@ -694,7 +694,7 @@ padding:8px 12px;margin:0 8px 8px 0}
 <div class="chartbox"><div class="ct">净值曲线（对数）</div><div id="nav" style="height:400px"></div></div>
 <div class="chartbox"><div class="ct">回撤曲线（%）</div><div id="dd" style="height:300px"></div></div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="echarts.min.js"></script>
 <script>
 var D = __DATA__;
 function line(el, series, log, yFmt){
